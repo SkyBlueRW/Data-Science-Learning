@@ -1,0 +1,225 @@
+\documentclass[a4paper, 10pt,landscape]{article}
+\usepackage{palatino}
+\usepackage{multicol}
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage[landscape]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb, amsthm}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+
+\usepackage{latexsym, marvosym}
+\usepackage{pifont}
+\usepackage{lscape}
+\usepackage{dsfont}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage[bottom]{footmisc}
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+\usepackage{pdfpages}
+\usepackage{wrapfig}
+\usepackage{enumitem}
+\setlist[description]{leftmargin=0pt}
+\usepackage{xfrac}
+
+\usepackage[
+            open,
+            openlevel=2
+            ]{bookmark}
+\usepackage{relsize}
+\usepackage{rotating}
+
+ \newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+    \def\independenT#1#2{\mathrel{\setbox0\hbox{$#1#2$}%
+    \copy0\kern-\wd0\mkern4mu\box0}} 
+            
+\newcommand{\noin}{\noindent}    
+\newcommand{\logit}{\textrm{logit}} 
+\newcommand{\var}{\textrm{Var}}
+\newcommand{\cov}{\textrm{Cov}} 
+\newcommand{\corr}{\textrm{Corr}} 
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\Bern}{\textrm{Bern}}
+\newcommand{\Bin}{\textrm{Bin}}
+\newcommand{\Beta}{\textrm{Beta}}
+\newcommand{\Gam}{\textrm{Gamma}}
+\newcommand{\Expo}{\textrm{Expo}}
+\newcommand{\Pois}{\textrm{Pois}}
+\newcommand{\Unif}{\textrm{Unif}}
+\newcommand{\Geom}{\textrm{Geom}}
+\newcommand{\NBin}{\textrm{NBin}}
+\newcommand{\Hypergeometric}{\textrm{HGeom}}
+\newcommand{\HGeom}{\textrm{HGeom}}
+\newcommand{\Mult}{\textrm{Mult}}
+
+\geometry{top=.4in,left=.2in,right=.2in,bottom=.4in}
+
+\pagestyle{empty}
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%x
+                                {\normalfont\large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+                                {-1explus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%
+                                {\normalfont\normalsize\bfseries}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {1ex plus .2ex}%
+                                {\normalfont\small\bfseries}}
+\makeatother
+
+\setcounter{secnumdepth}{0}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
+
+% -----------------------------------------------------------------------
+
+\usepackage{titlesec}
+
+\titleformat{\section}
+{\color{blue}\normalfont\large\bfseries}
+{\color{blue}\thesection}{1em}{}
+\titleformat{\subsection}
+{\color{violet}\normalfont\normalsize\bfseries}
+{\color{violet}\thesection}{1em}{}
+% Comment out the above 5 lines for black and white
+
+\begin{document}
+
+\raggedright
+\footnotesize
+\begin{multicols*}{3}
+
+% multicol parameters
+% These lengths are set only within the two main columns
+%\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% TITLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+    {\color{blue} {\textbf{Probability and Statistic Theory}}} \\
+    % comment out line with \color{blue} and uncomment above line for b&w
+\end{center}
+
+
+\section{Convergence and Inequality}
+
+Let $X_1,\dots,X_n$ be i.i.d. random variables with $\mathbb{E}\left[X\right]=\mu$ and $\var(X)=\sigma^2$.
+
+\begin{description}
+	\item[Law of Large Numbers] ~
+	\begin{equation*}
+	\overline{X}_n=\frac{1}{n}\sum_{i=1}^{n}X_i\quad\xrightarrow[n\rightarrow\infty]{\mathbb{P}, a.s.}\quad\mu.
+	\end{equation*}
+	\item[Central Limit Theorem] ~
+	$$\sqrt{n}\left(\overline{X}_n-\mu\right)\quad\xrightarrow[n\rightarrow\infty]{(d)}\quad\mathcal{N}\left(0,\sigma^2\right).$$
+	\item[Multi CLT]  Let $X_1,\dots,X_n\in\mathbb{R}^d$ be independent copies of a random vector $X$ such that $\mathbb{E}\left[X\right]=\mu$, $\cov\left(X\right)=\Sigma$, then
+	$$\sqrt{n}\left(\overline{X}_n-\mu\right)\quad\xrightarrow[n\rightarrow\infty]{(d)}\quad\mathcal{N}_d\left(0,\Sigma\right)$$	
+	\item[Hoeffding's Inequality] Let $X, X_1,\dots X_n$ be i.i.d. random variables such that $\mathbb{E}\left[X\right]=\mu$ and $X\in\left[a,b\right]$ almost surely. Then, \begin{equation*}
+		\mathbb{P}\left(\left|\overline{X}_n-\mu\right|\geq\epsilon\right)\leq2e^{-\frac{2n\epsilon^2}{(b-a)^2}}\quad\forall\epsilon>0
+	\end{equation*}
+	\item[Markov Inequality] If $X \geq 0$ and $a > 0$, then $\mathbb{P} (X\geq a) \leq \frac{\mathbb{E}[X]}{a}$
+	\item[Chebyshev Inequality] Variable is unlikely to be far from the mean. $\mathbb{P}(|X-\mu| \geq c) \leq \frac{\sigma^2}{c^2}$
+\end{description}
+
+
+\begin{description}
+	\item[Almost Surely (a.s.) Convergence] ~
+	\begin{equation*}
+		T_n\xrightarrow[n\rightarrow\infty]{a.s.}T\iff\mathbb{P}\left[\left\{\omega:T_n(\omega)\xrightarrow[n\rightarrow\infty]{}T(\omega)\right\}\right]=1
+	\end{equation*}
+	\item[Convergence in Probability] ~
+	\begin{equation*}
+		T_n\xrightarrow[n\rightarrow\infty]{\mathbb{P}}T\iff\mathbb{P}\left(\left|T_n-T\right|\geq\epsilon\right)\xrightarrow[n\rightarrow\infty]{}0\quad\forall\epsilon>0
+	\end{equation*}
+	\item[Convergence in Distribution] ~
+	\begin{equation*}
+	T_n\xrightarrow[n\rightarrow\infty]{(d)}T\iff\mathbb{E}\left[f\left(T_n\right)\right]\xrightarrow[n\rightarrow\infty]{}\mathbb{E}\left[f\left(T\right)\right]
+	\end{equation*}
+	for all continuous and bounded function $f$.
+\end{description}
+
+\subsubsection{Continuous Mapping Theorem}
+If $f$ is a continuous function, then $$T_n\xrightarrow[n\rightarrow\infty]{a.s./\mathbb{P}/(d)}T\quad\Rightarrow\quad f\left(T_n\right)\xrightarrow[n\rightarrow\infty]{a.s./\mathbb{P}/(d)}f\left(T\right).$$
+
+
+\subsubsection{The Delta Method}
+Let $\left(Z_n\right)_{n\geq1}$ be a sequence of random variables that satisfies $$\sqrt{n}\left(Z_n-\theta\right)\quad\xrightarrow[n\rightarrow\infty]{(d)}\quad\mathcal{N}\left(0,\sigma^2\right)$$
+for some $\theta\in\mathbb{R}$ and $\sigma^2>0$ .
+Let $g:\mathbb{R}\rightarrow\mathbb{R}$ be continuously differentiable at the point $\theta$. Then $$\sqrt{n}\left(g\left(Z_n\right)-g\left(\theta\right)\right)\quad\xrightarrow[n\rightarrow\infty]{(d)}\quad\mathcal{N}\left(0,\left(g'(\theta)\right)^2\sigma^2\right).$$
+
+\subsubsection{Multi Delta Method}
+Let $\left(T_n\right)_{n\geq1}$ sequence of random vectors in $\mathbb{R}^d$ such that
+	$$\sqrt{n}\left(T_n-\theta\right)\quad\xrightarrow[n\rightarrow\infty]{(d)}\quad\mathcal{N}_d\left(0,\Sigma\right),$$
+	for some $\theta\in\mathbb{R}^d$ and some covariance $\Sigma\in\mathbb{R}^{d\times d}$.
+	Let $g:\mathbb{R}^d\rightarrow\mathbb{R}^k$ ($k\geq1$) be continuously differentiable at $\theta$. Then,
+	$$\sqrt{n}\left(g\left(T_n\right)-g\left(\theta\right)\right)\quad\xrightarrow[n\rightarrow\infty]{(d)}\quad\mathcal{N}\left(0,\nabla g(\theta)^\intercal\Sigma\,\nabla g(\theta)\right),$$
+	where $\nabla g(\theta)=\dfrac{\partial g(\theta)}{\partial\theta}=\left(\dfrac{\partial g_j}{\partial\theta_i}\right)_{1\leq i\leq d\atop
+		 1\leq j\leq k}\in\mathbb{R}^{d\times k}$
+
+
+
+\section{Estimation}
+\begin{description}
+	\item[Consistent Estimator]$$\hat{\theta}_n\xrightarrow[n\rightarrow\infty]{\mathbb{P}\; (\text{resp. } a.s.)}\theta\quad(\text{w.r.t. } \mathbb{P}).$$
+	\item[Asymptotic Normal]$$\sqrt{n}\left(\hat{\theta}_n-\theta\right)\xrightarrow[n\rightarrow\infty]{(d)}\mathcal{N}\left(0,\sigma^2\right)$$
+	\item[Jensen's Inequality] If the function $f(x)$ is convex, $$\mathbb{E}\left[f\left(X\right)\right]\geq f\left(\mathbb{E}\left[X\right]\right).$$
+
+\end{description}
+
+\subsection{MLE}
+\begin{description}
+	\item[Total Variation]~
+			$$\text{TV}\left(\mathbb{P}_\theta, \mathbb{P}_{\theta'}\right)=\max\limits_{A\subset E}\left|\mathbb{P}_\theta(A)-\mathbb{P}_{\theta'}(A)\right|$$
+			$$\text{TV}\left(\mathbb{P}_\theta,\mathbb{P}_{\theta'}\right)=\frac{1}{2}\sum_{x\in E}\left|p_\theta(x)-p_{\theta'}(x)\right|$$
+			$$\text{TV}\left(\mathbb{P}_\theta,\mathbb{P}_{\theta'}\right)=\frac{1}{2}\int\left|f_\theta(x)-f_{\theta'}(x)\right|dx$$
+	\item[Kullback-Leibler(KL) Divergence]: positive and definite (0 means same distribution), but not meet triagular inequality and symmetrical
+	\[\text{KL}\left(\mathbb{P}_\theta,\mathbb{P}_{\theta'}\right)=
+	\begin{cases}
+		\sum\limits_{x\in E}p_\theta(x)\log\left(\dfrac{p_\theta(x)}{p_{\theta'}(x)}\right)\qquad\text{if $E$ is discrete}\\[10pt]
+		{\displaystyle\int_{E}}f_\theta(x)\log\left(\dfrac{f_\theta(x)}{f_{\theta'}(x)}\right)dx\qquad\text{if $E$ is continuous}
+	\end{cases}\]
+
+	\item[MLE estimator] $$\hat{\theta}_n^\text{MLE}=\argmax\limits_{\theta\in\Theta}L\left(X_1,\dots,X_n,\theta\right),$$
+
+	\item[Fisher Information] ~
+		$$\ell(\theta)=\log L_1\left(X,\theta\right),\quad\theta\in\Theta\subset\mathbb{R}^d.$$
+		Assume that $\ell$ is a.s. twice differentiable. Under some regularity conditions, the Fisher information of the statistical model is defined as
+		$$I(\theta)=\mathbb{E}\left[\nabla\ell(\theta)\nabla\ell(\theta)^\intercal\right]-\mathbb{E}\left[\nabla\ell(\theta)\right]\mathbb{E}\left[\nabla\ell(\theta)\right]^\intercal=-\mathbb{E}\left[\mathbb{H}\ell(\theta)\right].$$
+		If $\Theta\subset\mathbb{R}$, we get
+		$$I(\theta)=\var\left[\ell'(\theta)\right]=-\mathbb{E}\left[\ell''(\theta)\right].$$
+	
+	\item[Asymptotical Normality]~
+		\begin{enumerate}
+		\item The parameter is identifiable.
+		\item For all $\theta\in\Theta$, the support of $\mathbb{P}_\theta$ does not depend on $\theta$.
+		\item $\theta^*$ is not on the boundary of $\Theta$.
+		\item $I(\theta)$ is invertible in a neighborhood of $\theta^*$.
+		\item A few more technical conditions.
+		\end{enumerate}
+		Then, $\hat{\theta}_n^\text{MLE}$ satisfies
+		\begin{itemize}
+			\item $\hat{\theta}_n^\text{MLE}\quad\xrightarrow[n\rightarrow\infty]{\mathbb{P}}\quad\theta^*$ w.r.t. $\mathbb{P}_{\theta^*}$;
+			\item $\sqrt{n}\left(\hat{\theta}_n^\text{MLE}-\theta^*\right)\quad\xrightarrow[n\rightarrow\infty]{(d)}\quad\mathcal{N}_d\left(0,I^{-1}(\theta^*)\right)$ w.r.t. $\mathbb{P}_{\theta^*}$.
+		\end{itemize}		
+\end{description}
+
+
+
+
+\end{multicols*}
+
+
+\end{document}
