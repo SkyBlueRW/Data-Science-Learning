@@ -108,11 +108,14 @@
 %%% TITLE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{center}
-    {\color{blue} {\textbf{Probability and Statistic Theory}}} \\
-    % comment out line with \color{blue} and uncomment above line for b&w
-\end{center}
-
+\section{Statistical Model}
+	\begin{description}
+		\item[] $\left(E,\left(\mathbb{P}_\theta\right)_{\theta\in\Theta}\right)$
+		\item[Parametric Model] Dim of $\Theta$ is finite. $\Theta\subseteq\mathbb{R}^d$
+		\item[Identifiable Parameter]~
+			The parameter $\theta$ is called {\it identifiable} if and only if the map $\theta\in\Theta\mapsto\mathbb{P}_\theta$ is injective (Veryfy by solve CDF/PMF and see if uniquely determined by $\theta$)., $$\theta\neq \theta'\quad\implies\quad\mathbb{P}_\theta\neq\mathbb{P}_{\theta'}$$
+or equivalently, $$\mathbb{P}_\theta=\mathbb{P}_{\theta'}\quad\implies\quad\theta=\theta'.$$
+	\end{description}
 
 \section{Convergence and Inequality}
 
@@ -160,7 +163,7 @@ Let $\left(Z_n\right)_{n\geq1}$ be a sequence of random variables that satisfies
 for some $\theta\in\mathbb{R}$ and $\sigma^2>0$ .
 Let $g:\mathbb{R}\rightarrow\mathbb{R}$ be continuously differentiable at the point $\theta$. Then $$\sqrt{n}\left(g\left(Z_n\right)-g\left(\theta\right)\right)\quad\xrightarrow[n\rightarrow\infty]{(d)}\quad\mathcal{N}\left(0,\left(g'(\theta)\right)^2\sigma^2\right).$$
 
-\subsubsection{Multi Delta Method}
+\subsection{Multivariate Delta Method}
 Let $\left(T_n\right)_{n\geq1}$ sequence of random vectors in $\mathbb{R}^d$ such that
 	$$\sqrt{n}\left(T_n-\theta\right)\quad\xrightarrow[n\rightarrow\infty]{(d)}\quad\mathcal{N}_d\left(0,\Sigma\right),$$
 	for some $\theta\in\mathbb{R}^d$ and some covariance $\Sigma\in\mathbb{R}^{d\times d}$.
@@ -176,11 +179,6 @@ Let $\left(T_n\right)_{n\geq1}$ sequence of random vectors in $\mathbb{R}^d$ suc
 	\item[Consistent Estimator]$$\hat{\theta}_n\xrightarrow[n\rightarrow\infty]{\mathbb{P}\; (\text{resp. } a.s.)}\theta\quad(\text{w.r.t. } \mathbb{P}).$$
 	\item[Asymptotic Normal]$$\sqrt{n}\left(\hat{\theta}_n-\theta\right)\xrightarrow[n\rightarrow\infty]{(d)}\mathcal{N}\left(0,\sigma^2\right)$$
 	\item[Jensen's Inequality] If the function $f(x)$ is convex, $$\mathbb{E}\left[f\left(X\right)\right]\geq f\left(\mathbb{E}\left[X\right]\right).$$
-
-\end{description}
-
-\subsection{MLE}
-\begin{description}
 	\item[Total Variation]~
 			$$\text{TV}\left(\mathbb{P}_\theta, \mathbb{P}_{\theta'}\right)=\max\limits_{A\subset E}\left|\mathbb{P}_\theta(A)-\mathbb{P}_{\theta'}(A)\right|$$
 			$$\text{TV}\left(\mathbb{P}_\theta,\mathbb{P}_{\theta'}\right)=\frac{1}{2}\sum_{x\in E}\left|p_\theta(x)-p_{\theta'}(x)\right|$$
@@ -192,9 +190,18 @@ Let $\left(T_n\right)_{n\geq1}$ sequence of random vectors in $\mathbb{R}^d$ suc
 		{\displaystyle\int_{E}}f_\theta(x)\log\left(\dfrac{f_\theta(x)}{f_{\theta'}(x)}\right)dx\qquad\text{if $E$ is continuous}
 	\end{cases}\]
 
-	\item[MLE estimator] $$\hat{\theta}_n^\text{MLE}=\argmax\limits_{\theta\in\Theta}L\left(X_1,\dots,X_n,\theta\right),$$
+\end{description}
 
-	\item[Fisher Information] ~
+\subsection{MLE}
+\begin{description}
+	
+
+	\item[MLE estimator] 
+		$$\hat{\theta}_n^\text{MLE}=\argmax\limits_{\theta\in\Theta}L\left(X_1,\dots,X_n,\theta\right),$$
+		$$ = \argmax\limits_{\theta\in\Theta} \sum_i^n log(f_{\theta}(X_i))$$
+
+	\item[Fisher Information] On average how curved is the log-likelihood function
+		
 		$$\ell(\theta)=\log L_1\left(X,\theta\right),\quad\theta\in\Theta\subset\mathbb{R}^d.$$
 		Assume that $\ell$ is a.s. twice differentiable. Under some regularity conditions, the Fisher information of the statistical model is defined as
 		$$I(\theta)=\mathbb{E}\left[\nabla\ell(\theta)\nabla\ell(\theta)^\intercal\right]-\mathbb{E}\left[\nabla\ell(\theta)\right]\mathbb{E}\left[\nabla\ell(\theta)\right]^\intercal=-\mathbb{E}\left[\mathbb{H}\ell(\theta)\right].$$
@@ -214,7 +221,213 @@ Let $\left(T_n\right)_{n\geq1}$ sequence of random vectors in $\mathbb{R}^d$ suc
 			\item $\hat{\theta}_n^\text{MLE}\quad\xrightarrow[n\rightarrow\infty]{\mathbb{P}}\quad\theta^*$ w.r.t. $\mathbb{P}_{\theta^*}$;
 			\item $\sqrt{n}\left(\hat{\theta}_n^\text{MLE}-\theta^*\right)\quad\xrightarrow[n\rightarrow\infty]{(d)}\quad\mathcal{N}_d\left(0,I^{-1}(\theta^*)\right)$ w.r.t. $\mathbb{P}_{\theta^*}$.
 		\end{itemize}		
+	
+	\item[EM algorithm]~
+		\begin{enumerate}
+		\item[] Randomly initialize all parameters $\theta$ for latent variable Z and observable variable X
+		\item {\bf E-step:} (Complete data by replacing $Z_i$ with conditional expectation  $\mathbb{E}[Z_i|X_i]$ when $Z_i$ is Bernoulli = $\mathbb{P}(Z_i=1|X_i)$)
+			$$p(j|i)=\dfrac{p_j\mathcal{N}\left(\mathbf{x}^{(i)};\mu^{(j)},\sigma^2_j\mathbf{I}\right)}{p\left(\mathbf{x}|\theta\right)}$$
+			where likelihood $p(\mathbf{x}|\theta)=\sum\limits_{j=1}^{K}p_j\mathcal{N}\left(\mathbf{x}^{(i)};\mu^{(j)},\sigma^2_j\mathbf{I}\right)$
+		\item {\bf M-step:} (Plug $Z_i$ in likelihood and optimize with respect to parameter of X)
+			$$\widehat{n}_j=\sum_{i=1}^{n}p(j|i), \widehat{p}_j=\dfrac{\widehat{n}_j}{n}$$
+			$$\widehat{\mu}^{(j)}=\dfrac{1}{\widehat{n}_j}\sum_{i=1}^{n}p(j|i)\,\mathbf{x}^{(i)}$$
+			$$\widehat{\sigma}^2_j=\dfrac{1}{\widehat{n}_jd}\sum_{i=1}^{n}p(j|i) (||\mathbf{x}^{(i)}-\mu^{(j)} ||)^2$$
+		\end{enumerate}
+
+\subsection{M-estimation}
+	\item[M-estimation]
+		\begin{enumerate}
+			
+			\item Find the loss function $\rho:E\times\mathcal{M}\rightarrow\mathbb{R}$  where $\mathcal{M}$ is the set of all possible values for the unknown $\mu$, such that $$Q(\mu):=\mathbb{E}\left[\rho\left(X_1,\mu\right)\right]$$ achieves its minimum at $\mu=\mu^*$.
+			\item Estimator is then $\widehat{\mu}=\argmin\limits_{\mu}\dfrac{1}{n} \sum_i^n \rho(X_i, \mu)$
+		\end{enumerate}
+
+		\begin{itemize}
+		\item If $E=\mathcal{M}=\mathbb{R}$ and $\rho(x,\mu)=(x-\mu)^2,$ for all $x,\mu\in\mathbb{R}$: $\mu^*=\mathbb{E}\left[X\right]$.
+		\item If $E=\mathcal{M}=\mathbb{R}^d$ and $\rho(x,\mu)=\lVert x-\mu\rVert_2^2$, for all $x,\mu\in\mathbb{R}^d$: $\mu^*=\mathbb{E}\left[X\right]\in\mathbb{R}^d$.
+		\item If $E=\mathcal{M}=\mathbb{R}$ and $\rho(x,\mu)=|x-\mu|$, for all $x,\mu\in\mathbb{R}$: $\mu^*$ is a {\bf median} of $\mathbb{P}$.
+		\item If $E=\mathcal{M}=\mathbb{R}$, $\alpha\in(0,1)$ is fixed and $\rho(x,\mu)=C_\alpha(x-\mu)$, for all $x,\mu\in\mathbb{R}$: $\mu^*$ is a $\alpha$-quantile of $\mathbb{P}$.
+			$$C_\alpha=\begin{cases}
+			-(1-\alpha)x&\text{if }x<0\\
+			\alpha x&\text{if }x\geq0.
+			\end{cases}$$
+		\end{itemize}
+
+\subsection{Method of Moment Estimator}
+	\item[Moment Generating Function]~
+			$$M_X(t) = \mathbb{E}{e^{[tX]}}$$
+			$$\mathbb{E}[X^k] = \dfrac{d^k}{dt^k}M_X(t)|_{t=0}$$
+
+		\begin{description}
+			\item[Population Moments] Let $m_k(\theta)=\mathbb{E}_\theta\left[X_1^k\right]$, $1\leq k\leq d$.
+			\item[Empirical Moments] Let $\hat{m}_k=\overline{X_n^k}=\frac{1}{n}{\displaystyle\sum_{i=1}^{n}X_i^k}$, $1\leq k\leq d$.
+			$$\left(\hat{m}_1,\dots,\hat{m}_d\right)\quad\xrightarrow[n\rightarrow\infty]{\mathbb{P}/a.s.}\quad\left(m_1(\theta),\dots,m_d(\theta)\right)$$
+		\end{description}
+		
+	\item[Moments Estimator]
+		\begin{description}
+			\item Let
+			\begin{align*}
+			M:\Theta&\rightarrow\mathbb{R}^d\\
+				\theta&\mapsto M(\theta)=\left(m_1(\theta),\dots,m_d(\theta)\right)
+			\end{align*}
+			\item Assume $M$ is one-to-one: $$\theta=M^{-1}\left(m_1(\theta),\dots,m_d(\theta)\right)$$
+			\item[Moments estimator of $\theta$:] ~
+			$$\widehat{\theta}_n^\text{\;MM}=M^{-1}\left(\widehat{m}_1,\dots,\widehat{m}_d\right)$$
+		\end{description}
+	
+	\item[Generalized Method of Moment]~
+		$$\sqrt{n}\left(\widehat{\theta}_n^\text{\;MM}-\theta\right)\quad\xrightarrow[n\rightarrow\infty]{(d)}\quad\mathcal{N}\left(0,\Gamma(\theta)\right),$$
+	where $\Gamma(\theta)=\left[\dfrac{\partial M^{-1}}{\partial\theta}M(\theta)\right]^\intercal\Sigma(\theta)\left[\dfrac{\partial M^{-1}}{\partial\theta}M(\theta)\right]$
 \end{description}
+
+\section{Confidence Interval}
+	\begin{description}
+		\item[CI]: $\mathcal{I} = [L(X_1,...,X_n), U(X_1,...,X_n))]$
+		\item[CI of level $1-\alpha$] $$\mathbb{P}_\theta\left[\mathcal{I}\ni\theta\right]\geq1-\alpha,\quad\forall\theta\in\Theta$$
+		\item[CI of asymptotical level]  $$\lim\limits_{n\rightarrow\infty}\mathbb{P}_\theta\left[\mathcal{I}\ni\theta\right]\geq1-\alpha,\quad\forall\theta\in\Theta.$$
+		\item[Procedures to a CI] ~
+			\begin{enumerate}
+				\item  Start from a pivot statistic (non-asymptotic) or CLT (asymptotic)
+				\item Solve for $\mathbb{P}(\theta \in [\widehat{\theta}-s, \widehat{\theta}+s]) = 1-\alpha$
+				\item  Two side symmetrical $$\mathcal{I} = [\widehat{\theta} - \dfrac{\sigma q_{\alpha / 2}}{\sqrt{n}}, \widehat{\theta} + \dfrac{\sigma q_{\alpha / 2}}{\sqrt{n}}]$$
+					\begin{enumerate}
+						\item Conservative bound: use known bound on $\sigma$
+						\item Solve: solve equation
+						\item Plug-in: plug a consistent estimator of $\sigma$ 
+					\end{enumerate}
+			\end{enumerate}
+	\end{description}
+
+\section{Hypotheses Testing}
+$$\psi=\mathds{1}\{|T_n|>q_{\alpha / 2}\}=\mathds{1}\{T_n >q_{\alpha}\}=\mathds{1}\{T_n <-q_{\alpha}\}$$ Yes or No answer against 2 disjoint regions (both should be subsets of parameter space)
+	\begin{itemize}
+		\item {\bf Rejection region} of a test $\psi$: $R_\psi=\left\{x\in E^n:\psi(x)=1\right\}.$
+		\item {\bf Power Function}: $\beta(\theta) = \mathbb{P}_{\theta}[\psi = 1]$ 
+		\item {\bf Type I Error}: If $\theta \in \Theta_0$ (Given Null Reject Null; Reject wrongly)
+			$$ \mathbb{P}_{\theta}[Type I of \psi] = \beta(\theta)$$
+		\item{\bf Type II Error}: If $\theta \in \Theta_0$ (Given Alter not Reject Null)
+			$$\mathbb{P}_{\theta}[Type II of \psi] = 1 - \beta(\theta)$$
+		\item{\bf Level} (upper bound on Type I error): A test $\psi$ has level $\alpha$ if 
+			\begin{enumerate}
+				\item Non-Asymptotic: $\max_{\theta \in \Theta_0} \mathbb{P}_{\theta}[\psi = 1] <= \alpha$
+				\item Asymptotic:  $\lim\limits_{n\rightarrow\infty} \max_{\theta \in \Theta_0} \mathbb{P}_{\theta}[\psi = 1] <= \alpha$
+			\end{enumerate}
+		\item{\bf Test from CI}~
+			 Given a CI at level $1-\alpha$ I = [A, B], $\psi = 1 [\theta_0 \notin [A, B]]$ is a test at level $1-\alpha$
+
+		\item {\bf p-value}~
+			The (asymptotic) p-value of a test $\psi$ is the smallest (asymptotic) level $\alpha$ at which $\psi$ rejects $H_0$ \\
+			p-value = $\mathbb{P}(Z > T_n^{obs})$	
+	\end{itemize}
+
+\subsection{Parametric Test}
+	\begin{description}
+		\item[Wald's Test]~
+			\begin{itemize}
+				If an estimator is both consistent and asymptotically normal. Then we can define test with following test statistic $W=\dfrac{\widehat{\theta} - \theta_0}{\sqrt{\widehat{var(\widehat{\theta})}}}$. 
+				\item require Slusky for replacing $\sigma$
+				\item $\widehat{var(\widehat{\theta})}$ can be any consistent variance estimator of $\widehat{\theta}$
+				\item For MLE estimator it equals $W=\sqrt{n I(\widehat{\theta}^{MLE})}(\widehat{\theta}^{MLE} - \theta_0)$
+				\item 2-sample Wald-Test $$\dfrac{(\widehat{\mu_1} - \widehat{\mu_2}) - (\mu_1 - \mu_2)}{\sqrt{\dfrac{\widehat{\sigma_1}^2}{n_1} + \dfrac{\widehat{\sigma_2}^2}{n_2}}}$$
+			\end{itemize}
+		\item[Likelihood Test]~
+			
+			Consider an i.i.d. sample $X_1,\dots,X_n$ with statistical model $\left(E,\left(\mathbb{P}_\theta\right)_{\theta\in\Theta}\right)$, where $\Theta\subseteq\mathbb{R}^d$ ($d\geq1$). Suppose the null hypothesis has the form
+			$$H_0: \left(\theta_{r+1},\dots,\theta_{d}\right)=\left(\theta_{r+1}^{(0)},\dots,\theta_{d}^{(0)}\right),$$
+			for some fixed and given numbers $\theta_{r+1}^{(0)},\dots,\theta_{d}^{(0)}$.
+			\item Let $$\widehat{\theta}_n=\argmax\limits_{\theta\in\Theta}\ell_n(\theta)\qquad\text{(MLE)}$$
+			and $$\widehat{\theta}_n^c=\argmax\limits_{\theta\in\Theta_0}\ell_n(\theta)\qquad\text{({\it constrained MLE})}$$
+			where $\Theta_0=\left\{\theta\in\Theta:\left(\theta_{r+1},\dots,\theta_{d}\right)=\left(\theta_{r+1}^{(0)},\dots,\theta_{d}^{(0)}\right)\right\}$
+			\item Test statistic: ~
+			$$T_n=2\left(\ell_n\left(\hat{\theta}_n\right)-\ell_n\left(\hat{\theta}_n^c\right)\right).$$
+			\item Wilk's Theorem Assume $H_0$ is true and the MLE technical conditions are satisfied. Then,
+			$$T_n\quad\xrightarrow[n\rightarrow\infty]{(d)}\quad\chi_{d-r}^2$$
+			\item Likelihood ratio test with asymptotic level $\alpha\in(0,1)$:
+			$$\psi=\mathds{1}\left\{T_n>q_\alpha\right\},$$
+			where $q_\alpha$ is the ($1-\alpha$)-quantile of $\chi_{d-r}^2$.
+
+		\item[On sample T test]~
+			Works for expected value of Gaussian $X_i$ and small sample. In general, Wald test leads to smaller p-value		
+
+			For a positive integer $d$, the Student's T distribution with $d$ degrees of freedom (denoted by $t_d$) is the law of the random variable $\dfrac{Z}{\sqrt{V/d}}$, where $Z\sim\mathcal{N}(0,1)$, $V\sim\chi_d^2$ and $Z\independent V$.
+			
+			\item $$T_n=\sqrt{n}\dfrac{\overline{X}_n - \mu}{\sqrt{\widetilde{S}_n}}=\dfrac{\sqrt{n}\dfrac{\overline{X}_n-\mu}{\sigma}}{\sqrt{\dfrac{\widetilde{S}_n}{\sigma^2}}} \sim t_{n-1}$$, where $\widetilde{S}_n$ is the unbiased estimator
+
+		\item[Two sample T test]~
+
+			$$\dfrac{\overline{X}_n-\overline{Y}_m-\left(\Delta_d-\Delta_c\right)}{\sqrt{\dfrac{\widehat{\sigma}_d^2}{n}+\dfrac{\widehat{\sigma}_c^2}{m}}}\sim t_N$$
+			
+			$$N=\dfrac{\left(\dfrac{\widehat{\sigma}_d^2}{n}+\dfrac{\widehat{\sigma}_c^2}{m}\right)^2}{\dfrac{\widehat{\sigma}_d^4}{n^2(n-1)}+\dfrac{\widehat{\sigma}_c^4}{m^2(m-1)}}\geq\min(n,m)$$
+
+		\item[Multiple Test]~
+			\begin{itemize}
+				\item Family-wise error rate (FWER) = prob of making at least one false discovery (type I)
+				\item False discovery rate (FDR) = expected fraction of false discovery among all significant results
+				\item FDR $<=$ FWER
+				\item Bonferroni Correction to control FWER
+					$$p^i < \dfrac{\alpha}{m}$$
+				\item BH to control FDR
+					\begin{enumerate}
+						\item order p-value $P_1 < P_2 < ... < P_N$
+						\item find max k such that $P_i <= \dfrac{k}{m} \alpha$
+						\item reject all of $H_0^1$, ...., $H_0^k$
+					\end{enumerate}
+			\end{itemize}
+\end{description}		
+
+\subsection{Nonparametric Testing}
+	\begin{description}
+		\item[$\chi$ Test]~
+			when $H_0$ hold $$T_n=n\sum_{j=1}^{K}\dfrac{\left(\widehat{\mathbf{p}}_j-\mathbf{p}_j^0\right)^2}{\mathbf{p}_j^0}\quad\xrightarrow[n\rightarrow\infty]{(d)}\quad\chi_{K-1}^2$$
+		\item[$\chi$ Test for Family of Distribution]~
+			$$T_n=n\sum_{j=1}^{K}\dfrac{\left(\widehat{\mathbf{p}}_j- f_{\widehat{\theta}}(j) \right)^2}{f_{\widehat{\theta}}(j)}\quad\xrightarrow[n\rightarrow\infty]{(d)}\quad\chi_{K-d-1}^2$$
+			
+			d is the dim of parameter space
+		\item[Empirical CDF]~
+			\begin{align*}
+				F_n(t)&=\dfrac{1}{n}\sum_{i=1}^{n}\mathds{1}\left\{X_i\leq t\right\}\\
+				&=\dfrac{\#\{i=1,\dots,n:X_i\leq t\}}{n},\quad\forall t\in\mathbb{R}.
+			\end{align*}
+		\item[Consistency] $F_n(t)\quad\xrightarrow[n\rightarrow\infty]{a.s.}\quad F(t).$
+		\item[Glivenko-Cantelli Theorem] ~ $$\sup\limits_{t\in\mathbb{R}}\left|F_n(t)-F(t)\right|\quad\xrightarrow[n\rightarrow\infty]{a.s.}\quad0$$
+		\item[Asymptotic Normality] $\sqrt{n}\left(F_n(t)-F(t)\right)\quad\xrightarrow[n\rightarrow\infty]{(d)}\quad\mathcal{N}\left(0,F(t)\left(1-F(t)\right)\right)$
+		\item[Donsker's Theorem] $$\sqrt{n}\sup\limits_{t\in\mathbb{R}}\left|F_n(t)-F(t)\right|\quad\xrightarrow[n\rightarrow\infty]{a.s.}\quad\sup\limits_{0\leq t\leq 1}\left|\mathbf{B}(t)\right|,$$
+	where $\mathbf{B}(t)$ is a Brownian bridge on $[0,1]$. 
+		\item[Kolmogorov-Smirnov Test]~
+			\begin{description}
+				\item Let $T_n=\sup\limits_{t\in\mathbb{R}}\sqrt{n}\left|F_n(t)-F(t)\right|$. By Donsker's theorem, if $H_0$ is true, then $T_n\xrightarrow[n\rightarrow\infty]{(d)}Z$, where $Z$ has a known distribution (supremum of the absolute value of a Brownian bridge).
+				\item[KS test with asymptotic level $\alpha$:] ~
+				$$\delta_\alpha^\text{KS}=\mathds{1}\left\{T_n>q_\alpha\right\}$$
+				where $q_\alpha$ is the ($1-\alpha$)-quantile of $Z$.
+				\item Let $X_{(1)}\leq X_{(2)}\leq\dots\leq X_{(n)}$ be the reordered sample. The expression for $T_n$ reduces to
+				$$T_n=\sqrt{n}\max\limits_{i=1,\dots,n}\left\{\max\left(\left|\dfrac{i-1}{n}-F^0\left(X_{(i)}\right)\right|,\left|\dfrac{i}{n}-F^0\left(X_{(i)}\right)\right|\right)\right\}.$$
+				KS table is for $\dfrac{T_n}{\sqrt{n}}$
+			\end{description}	
+		\item[Kolmogorov-Lilliefors Test]~
+			\begin{description}		
+				\item We want to test if $X$ has a Gaussian distribution with unknown parameters. In this case, Donsker's theorem is {\it no longer valid}. Instead, we compute the quantiles for the test statistic
+				$$\sup\limits_{t\in\mathbb{R}}\left|F_n(t)-\Phi_{\hat{\mu},\hat{\sigma}^2}(t)\right|$$
+				where $\hat{\mu}=\overline{X}_n$, $\hat{\sigma}^2=S_n^2$ and $\Phi_{\hat{\mu},\hat{\sigma}^2}(t)$ is the CDF of $\mathcal{N}\left(\hat{\mu},\hat{\sigma}^2\right).$
+				\item They do not depend on unknown parameters.
+				\item Kolmogorov-Smirnov has a greater prob of rejection
+				\item Both Kolmogorov-Smirnov and Kolmogorov-Lilliefors test are non-asymptotic (statistics are pivot even for small n)
+			\end{description}
+		\item[QQ plot]~
+			\begin{itemize}
+				\item Provide a visual way to perform goodness of fit tests.
+				\item Not a formal test but quick and easy check to see if a distribution is plausible.
+				\item Main idea: We want to check visually if the plot of $F_n$ is close to that of $F$ or, equivalently, if the plot of $F_n^{-1}$ is close to $F^{-1}$.
+				\item Check if the points
+				$$\left(F^{-1}(\tfrac{1}{n}),F_n^{-1}(\tfrac{1}{n})\right),\dots,\left(F^{-1}(\tfrac{n-1}{n}),F_n^{-1}(\tfrac{n-1}{n})\right)$$
+				are near the line $y=x.$
+				\item $F_n$ is not technically invertible but we define
+				$$F_n^{-1}(\tfrac{i}{n})=X_i,$$
+				the $i$\textsuperscript{th} largest observation.
+			\end{itemize}
+			
+	\end{description}
+
 
 
 
