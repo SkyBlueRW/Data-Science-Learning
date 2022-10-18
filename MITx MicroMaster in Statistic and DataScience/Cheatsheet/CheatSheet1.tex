@@ -94,7 +94,7 @@
 
 \raggedright
 \footnotesize
-\begin{multicols*}{3}
+\begin{multicols*}{4}
 
 % multicol parameters
 % These lengths are set only within the two main columns
@@ -153,10 +153,6 @@ Let $X_1,\dots,X_n$ be i.i.d. random variables with $\mathbb{E}\left[X\right]=\m
 	\end{equation*}
 	for all continuous and bounded function $f$.
 \end{description}
-
-\subsubsection{Continuous Mapping Theorem}
-If $f$ is a continuous function, then $$T_n\xrightarrow[n\rightarrow\infty]{a.s./\mathbb{P}/(d)}T\quad\Rightarrow\quad f\left(T_n\right)\xrightarrow[n\rightarrow\infty]{a.s./\mathbb{P}/(d)}f\left(T\right).$$
-
 
 \subsubsection{The Delta Method}
 Let $\left(Z_n\right)_{n\geq1}$ be a sequence of random variables that satisfies $$\sqrt{n}\left(Z_n-\theta\right)\quad\xrightarrow[n\rightarrow\infty]{(d)}\quad\mathcal{N}\left(0,\sigma^2\right)$$
@@ -407,29 +403,157 @@ $$\psi=\mathds{1}\{|T_n|>q_{\alpha / 2}\}=\mathds{1}\{T_n >q_{\alpha}\}=\mathds{
 		\item[Kolmogorov-Lilliefors Test]~
 			\begin{description}		
 				\item We want to test if $X$ has a Gaussian distribution with unknown parameters. In this case, Donsker's theorem is {\it no longer valid}. Instead, we compute the quantiles for the test statistic
-				$$\sup\limits_{t\in\mathbb{R}}\left|F_n(t)-\Phi_{\hat{\mu},\hat{\sigma}^2}(t)\right|$$
+				$$\sqrt{n}\sup\limits_{t\in\mathbb{R}}\left|F_n(t)-\Phi_{\hat{\mu},\hat{\sigma}^2}(t)\right|$$
 				where $\hat{\mu}=\overline{X}_n$, $\hat{\sigma}^2=S_n^2$ and $\Phi_{\hat{\mu},\hat{\sigma}^2}(t)$ is the CDF of $\mathcal{N}\left(\hat{\mu},\hat{\sigma}^2\right).$
 				\item They do not depend on unknown parameters.
+				\item should compare $\dfrac{F_n}{\sqrt{n}}$ with the table for both tests
 				\item Kolmogorov-Smirnov has a greater prob of rejection
 				\item Both Kolmogorov-Smirnov and Kolmogorov-Lilliefors test are non-asymptotic (statistics are pivot even for small n)
 			\end{description}
 		\item[QQ plot]~
 			\begin{itemize}
-				\item Provide a visual way to perform goodness of fit tests.
-				\item Not a formal test but quick and easy check to see if a distribution is plausible.
-				\item Main idea: We want to check visually if the plot of $F_n$ is close to that of $F$ or, equivalently, if the plot of $F_n^{-1}$ is close to $F^{-1}$.
 				\item Check if the points
 				$$\left(F^{-1}(\tfrac{1}{n}),F_n^{-1}(\tfrac{1}{n})\right),\dots,\left(F^{-1}(\tfrac{n-1}{n}),F_n^{-1}(\tfrac{n-1}{n})\right)$$
 				are near the line $y=x.$
 				\item $F_n$ is not technically invertible but we define
 				$$F_n^{-1}(\tfrac{i}{n})=X_i,$$
 				the $i$\textsuperscript{th} largest observation.
-			\end{itemize}
-			
+			\end{itemize}		
 	\end{description}
 
+\section{Bayesian Stat}
+$$\pi\left(\theta|X_1,\dots,X_n\right)\propto\pi(\theta)L_n(X_1,\dots,X_n|\theta),\quad\forall\theta\in\Theta$$
 
+	\begin{description}
+		\item[Maximum a posteriori probability (MAP)]  The MAP estimate, $\hat{\theta}$, is the value at which the posterior distribution is maximum:  $$f_{\Theta|X}(\theta^*|x)=\max\limits_{\theta}f_{\Theta|X}(\theta|x).$$
+		\item[Least Mean Squares (LMS)] The LMS estimate is the conditional expectation of the posterior distribution: $$\hat{\theta}=\mathds{E}\left[\Theta|X=x\right].$$
+		\item[Linear Least Mean Squares LLMS]~
+			In some cases, the conditional expectation $\mathds{E}[\Theta|X]$ may be hard to compute or implement. In that case, we can restrict our attention to estimators of the form $\hat{\Theta}=aX+b.$ Then,
+		\begin{align*}
+			\hat{\Theta}_\text{LLMS}&=\mathds{E}[\Theta]+\frac{\cov(\Theta,X)}{\var(X)}\left(X-\mathds{E}[X]\right)\\
+			&=\mathds{E}[\Theta]+\rho\frac{\sigma_\Theta}{\sigma_X}\left(X-\mathds{E}[X]\right)
+		\end{align*}
+		\item[Gaussian Distribution] $\mu=-\dfrac{\beta}{2\alpha}, \sigma^2=\dfrac{1}{2\alpha}$
+			$$f_X(x) = c e^{-(\alpha x^2 + \beta x + \gamma)}$$
+		\item[Bayes Rule]~
+			\begin{enumerate}
+					\item[]Discrete $\Theta$, Discrete $X$
+	
+					$$p_{\Theta|X}(\theta|x)=\frac{p_\Theta(\theta)p_{X|\Theta}(x|\theta)}{p_X(x)}$$
+					$$p_X(x)=\sum_{\theta'}p_\Theta(\theta')p_{X|\Theta}(x|\theta')$$
+					\item[]Discrete $\Theta$, Continuous $X$
+					
+					$$p_{\Theta|X}(\theta|x)=\frac{p_\Theta(\theta)f_{X|\Theta}(x|\theta)}{f_X(x)}$$
+					$$f_X(x)=\sum_{\theta'}p_\Theta(\theta')f_{X|\Theta}(x|\theta')$$
+					\item[]Continuous $\Theta$, Continuous $X$
+					
+					$$f_{\Theta|X}(\theta|x)=\frac{f_\Theta(\theta)f_{X|\Theta}(x|\theta)}{f_X(x)}$$
+					$$f_X(x)=\int f_\Theta(\theta')f_{X|\Theta}(x|\theta')d\theta'$$
+					\item[]Continuous $\Theta$, Discrete $X$
+					
+					$$f_{\Theta|X}(\theta|x)=\frac{f_\Theta(\theta)p_{X|\Theta}(x|\theta)}{p_X(x)}$$
+					$$p_X(x)=\int f_\Theta(\theta')p_{X|\Theta}(x|\theta')d\theta'$$
+			\end{enumerate}
+		\item[Jeffreys Prior] Gives more weight to values of $\theta$ where
+			\begin{enumerate}
+				\item MLE estimate has less uncertainty
+				\item Data has more information torwards deciding the parameter
+				\item Potential outcomes are more sensitive to slight changes in $\theta$
+			\end{enumerate}
+		$$\pi_J(\theta)\propto\sqrt{\det I(\theta)}$$
+		\item{\bf Reparametrization invariance principle}: If $\eta$ is a reparametrization of $\theta$ (i.e., $\eta=\phi(\theta)$ for some one-to-one map $\phi$), then the PDF $\tilde{\pi}(\cdot)$ of $\eta$ satisfies:
+	$$\tilde{\pi}(\eta)\propto\sqrt{\det\tilde{I}(\eta)},$$
+	where $\tilde{I}(\eta)$ is the Fisher information of the statistical model parametrized by $\eta$ instead of $\theta$.
+	
+	For $\theta = f(\theta_1)$, $I(\theta)d\theta = I(f(\theta_1))df(\theta_1)=I^{(1)}(\theta_1)d\theta_1$
+	\end{description}
 
+\section{Linear Regression}
+	\begin{description}
+		\item[Regression Function]~
+			Give Join Prob Distribution $\mathbb{P}$, the regression function of Y with respect to X is 
+			$$v(x) = \mathbb{E}[Y|X=x]=\sum_{\Omega_{Y}}y \mathbb{P}(Y=y|X=x)$$
+			$$m(x), \int_{-\infty}^{m(x)}h(y|x)dy=\frac{1}{2}$$
+			$$m(x), \int_{-\infty}^{m(x)}h(y|x)dy=1-\alpha$$
+		\item[Probabilistic Analysis]~
+			\begin{align*}
+				b^* & = \dfrac{\cov\left(X,Y\right)}{\var\left(X\right)}\\
+				a^* & = \mathbb{E}[Y]-b^*\mathbb{E}[X]=\mathbb{E}[Y]-\dfrac{\cov\left(X,Y\right)}{\var\left(X\right)}\mathbb{E}[X]
+			\end{align*}
+		\item[LSE]~
+				\begin{align*}
+					\hat{b} & = \dfrac{\overline{XY}-\overline{X}\,\overline{Y}}{\overline{X^2}-\overline{X}^2}\\
+					\hat{a} & = \overline{Y}-\hat{b}\overline{X}
+				\end{align*}
+		\item[Property of LSE]~
+			\begin{itemize}
+				\item LSE = MSE
+				\item Distribution of $\widehat{\boldsymbol{\beta}}$:
+				$$\widehat{\boldsymbol{\beta}}\sim\mathcal{N}_p\left(\boldsymbol{\beta}^*,\sigma^2\left(\mathbb{X}^\intercal\mathbb{X}\right)^{-1}\right)$$
+				\item Quadratic Risk of $\widehat{\boldsymbol{\beta}}$:
+				$$\mathbb{E}\left[\lVert\widehat{\boldsymbol{\beta}}-\boldsymbol{\beta}\rVert_2^2\right]=\sigma^2\textbf{tr}\left(\left(\mathbb{X}^\intercal\mathbb{X}\right)^{-1}\right)$$
+				\item Prediction Error:
+				$$\mathbb{E}\left[\lVert\mathbf{Y}-\mathbb{X}\widehat{\boldsymbol{\beta}}\rVert_2^2\right]=\sigma^2\left(n-p\right)$$
+				\item Unbiased estimator of $\sigma^2$:
+				$$\widehat{\sigma}^2=\dfrac{\lVert\mathbf{Y}-\mathbb{X}\widehat{\boldsymbol{\beta}}\rVert_2^2}{n-p}=\dfrac{1}{n-p}\sum_{i=1}^{n}\widehat{\varepsilon}_i^{\,2}$$
+				\item Fisher Info $I(\beta) = \dfrac{X^T X}{\sigma^2}$
+				\item Heterosckedasticity $\widehat{\beta} = (X^T \Sigma^{-1}X)^{-1}X^T\Sigma^{-1}Y$
+			\end{itemize}
+		\item[T test (Non-asym)]~
+			$$\dfrac{\mu^T \widehat{\beta} - \mu^T \beta^{0}}{\widehat{\sigma} \sqrt{\mu^T(X^T X)^{-1} \mu}} \sim t_{n-p}$$
+	\end{description}
+
+\section{Generalized Linear Model}
+\begin{description}
+	\item[Generalization]~
+		\begin{enumerate}
+			\item {Random component}: $Y|X=x\sim$ some distribution
+			\item {Regression function}: $\left(\mu(x)\right)=x^\intercal\beta$, g is the link function
+		\end{enumerate}
+
+	\item[Exponential Family]~
+		A family of distribution with the following format
+		\begin{itemize}
+			\item $\eta_1,\dots,\eta_k$ and $B(\theta)$
+			\item $T_1,\dots,T_k$, and $h(y)\in\mathbb{R}^q$
+		\end{itemize}
+		such that the density function of $\mathbb{P}_\theta$ can be written as
+		$$f_\theta(y)=\exp\left[\sum_{i=1}^{k}\eta_i(\theta)T_i(y)-B(\theta)\right]h(y)$$
+
+	\item[One Param Canonical Exponential Family]~
+		$$f_\theta(y)=\exp\left(\dfrac{y\theta-b(\theta)}{\phi}+c(y,\phi)\right)$$
+		for some known functions $b(\theta)$ and $c(y,\phi)$.
+		\begin{itemize}
+			\item {\bf Expected value} $\mathbb{E}\left[Y\right]=b'(\theta).$
+			\item {\bf Variance} $\var(Y)=b''(\theta)\cdot\phi$
+		\end{itemize}
+	\item[GLM]~
+		\begin{itemize}
+			\item {\bf Link function} Relate $X^T \beta$ to $\mu$
+				$$X^T\beta = g(\mu) = g(\mu(X))$$
+				$$\mu = g^{-1}(X^T \beta)$$
+			\item {\bf Canonical Link} Function that link $\mu$ to the canonical parameter $\theta$
+				$$g(\mu) = \theta = (b^{'})^{-1}(\mu)$$
+			\item {\bf Full Model}
+				\begin{description}
+					\item Let $(X_i,Y_i)\in\mathbb{R}^p\times\mathbb{R}$, $i=1,\dots,n$ be independent random pairs such that the conditional distribution of $Y_i$ given $X_i=x_i$ has density in the canonical exponential family:
+					$$f_{\theta_i}(y_i)=\exp\left[\dfrac{y_i\theta_i-b(\theta_i)}{\phi}+c(y_i,\phi)\right]$$
+					\item[Back to $\beta$:] Given a link function $g$, note the following relationship between $\beta$ and $\theta$:
+					$$\theta_i=(b')^{-1}(\mu_i)=(b')^{-1}\left(g^{-1}(X_i^\intercal\beta)\right)\equiv h\left(X_i^\intercal\beta\right)$$
+					where $h$ is defined as $$h=(b')^{-1}\circ g^{-1}=(g\circ b')^{-1}.$$
+					If $g$ is the {\it canonical link function}, $h$ is the {\bf identity} $g=(b')^{-1}$.
+					\item[Log-likelihood] The log-likelihood is given by
+					\begin{align*}
+						\ell_n\left(\mathbf{Y},\mathbb{X},\beta\right) & =\sum_{i}\dfrac{Y_i\theta_i-b(\theta_i)}{\phi}+\text{constant}\\
+						& = \sum_{i}\dfrac{Y_ih\left(X_i^\intercal\beta\right)-b\left(h\left(X_i^\intercal\beta\right)\right)}{\phi}+\text{constant}
+					\end{align*}
+					When we use the {\it canonical link function}, we obtain the expression
+					$$\ell_n\left(\mathbf{Y},\mathbb{X},\beta\right)=\sum_{i}\dfrac{Y_iX_i^\intercal\beta-b\left(X_i^\intercal\beta\right)}{\phi}+\text{constant}$$
+				\end{description}
+
+		\end{itemize}
+
+\end{description}
 
 
 \end{multicols*}
