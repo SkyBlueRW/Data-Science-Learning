@@ -115,6 +115,7 @@
 		\item[Identifiable Parameter]~
 			The parameter $\theta$ is called {\it identifiable} if and only if the map $\theta\in\Theta\mapsto\mathbb{P}_\theta$ is injective (Veryfy by solve CDF/PMF and see if uniquely determined by $\theta$)., $$\theta\neq \theta'\quad\implies\quad\mathbb{P}_\theta\neq\mathbb{P}_{\theta'}$$
 or equivalently, $$\mathbb{P}_\theta=\mathbb{P}_{\theta'}\quad\implies\quad\theta=\theta'.$$
+		\item[Quantile] $F(q_{\alpha})=P(X \leq q_{\alpha}) = 1 - \alpha$
 	\end{description}
 
 \section{Convergence and Inequality}
@@ -418,6 +419,7 @@ $$\psi=\mathds{1}\{|T_n|>q_{\alpha / 2}\}=\mathds{1}\{T_n >q_{\alpha}\}=\mathds{
 				\item $F_n$ is not technically invertible but we define
 				$$F_n^{-1}(\tfrac{i}{n})=X_i,$$
 				the $i$\textsuperscript{th} largest observation.
+				\item Right heavy tail (above). Left heavy tail (below)
 			\end{itemize}		
 	\end{description}
 
@@ -591,7 +593,7 @@ $$\pi\left(\theta|X_1,\dots,X_n\right)\propto\pi(\theta)L_n(X_1,\dots,X_n|\theta
 				0 + O(\delta^2) \qquad \text{if k$>$1}
 		\end{cases}$$
 
-		$$\mathbb{P}(k,\tau) = \mathbb{P}(N_{\tau}) = \dfrac{1}{k!}$$
+		$$\mathbb{P}(k,\tau) = \mathbb{P}(N_{\tau}) = \dfrac{(\lambda \tau)^k e^{-\lambda \tau}}{k!}$$
 
 	\item[Time until first arrival] $T_1 \sim Exp(\lambda)$
 
@@ -686,6 +688,9 @@ Given distribution of x what is the distribution of $y = g(x)$
 				$$E[Y] = E[N]E[X]$$
 				$$Var[Y] = E[N]var[X] + (E[X])^2var(N)$$
 		\end{itemize}
+
+
+
 \end{description}
 
 
