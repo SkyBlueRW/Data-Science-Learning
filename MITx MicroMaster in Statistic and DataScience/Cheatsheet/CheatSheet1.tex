@@ -618,5 +618,76 @@ $$\pi\left(\theta|X_1,\dots,X_n\right)\propto\pi(\theta)L_n(X_1,\dots,X_n|\theta
 		$$(V - t^{\star}) , (t^{\star} - U) \sim Exp(\lambda)$$
 \end{description}
 
+
+\section{Markov Process}
+Given curent state, past does not matter
+\begin{description}
+	\item[N step transition prob]~
+		\begin{itemize}
+			\item $r_{ij}(n) = \mathbb{P}(X_{n+s}=j | X_s =i)$
+			\item recursion: $r_{ij}(n) = \sum_{k=1}^{m}r_{ik}(n-1)p_{kj}$
+			\item random initial state: $\mathbb{P}(X_n=j) = \sum_{i=1}^{m}\mathbb{P}(X_0=i)r_{ij}(n)$
+			\item convergence to $\pi_{j}$ (not depend on n and i; only one recurrent class and it is not periodic)
+		\end{itemize}
+	\item[Recurrent]~
+		\begin{itemize}
+			\item  States: starting from i, and from wherever you can go, there is a way of returning to i
+			\item  Class: a collection of recurrent states communicating only between each other
+			\item Periodic states in recurrent class:can be grouped in to d$>$1 groups so that all transitions from one group lead to the next group 
+		\end{itemize}
+	\item[Steady-stae Prob]~
+		\begin{itemize}
+			\item Converge to $\pi_j$ if recurrent states are all in single class and is not periodic
+			\item $\pi_j = \sum_k \pi_k p_{kj},   \sum_{j=1}^m\pi_j = 1$
+			\item can be interpreted as: long run frequency in j, frequency of transition intoj
+		\end{itemize}
+	\item[birth-death process]~
+		\begin{itemize}
+			\item $\pi_i p_i = \pi_{i+1}q_{i+1}$
+			\item $\pi_0 + \pi_0 \dfrac{p_0}{q_1} + \pi_0 \dfrac{p_0 p_1}{q_1 q_2} + ... = 1$
+			\item For fixed p $<$q:  $\mathbb{E}(X_n)[\dfrac{\rho}{1-\rho}]$
+			\item for p=q, all $\pi$ equal
+		\end{itemize}
+	\item[Absorption state]~
+		\begin{itemize}
+			\item $a_i$ is the prob that eventually settle in absorb state a starting from i $a_i = \sum_{j=1}^m p_{ij}a_j$
+			\item $\mu_i$ is the expected number of transitions reaching absorb state a starting from i $\mu_i = 1 + \sum_j p_{ij}\mu_j$
+		\end{itemize}
+	\item[First passage and recurrence times]~
+		\begin{itemize}
+			\item Mean first passage time from i to s: $t_i = \mathbb{E}[min\{n \geq 0 such X_n=s\}|X_0=i]$ 
+			\item $t_s =0,  t_i = 1 + \sum_j p_{ij}t_j$ for all $i <> s$
+			\item $t_s^{\star} = \mathbb{E}[min\{n \geq 1 such X_n=s\}|X_0=s]$ 
+			\item $t_s^{\star} = 1 + \sum_j p_{sj}t_j$
+		\end{itemize}
+\end{description}
+
+\section{Derived Distribution}
+Given distribution of x what is the distribution of $y = g(x)$
+\begin{description}
+	\item[Discrete case]~
+		\begin{itemize}
+			\item $\mathbb{P}_Y(y) = \mathbb{P}(g(x) = y) = \sum_{x: g(x)=y}\mathbb{P}_X(x)$
+			\item When $g(x) = ax + b$  $$\mathbb{P}_Y(y)=\mathbb{P}_X(\dfrac{y-b}{a})$$
+		\end{itemize}
+	\item[Continuous case]~
+		\begin{itemize}
+			\item {\bf CDF}: $F_Y(y)=\mathbb{P}(Y \leq y) = \mathbb{P}(g(x) \leq y)$
+			\item {\bf Take derivative} $f_Y(y) = \dfrac{dF_Y}{dy}(y)$
+			\item when $g(X) = aX +b$, then $f_Y(y) = \dfrac{1}{|a|}f_X(\dfrac{y-b}{a})$
+			\item when g is mononic. $$f_Y(y) = f_X(g^{-1}(y)) |\dfrac{g^{-1}(y)}{dy}|$$
+		\end{itemize}
+	\item[Sum of RV]~
+		\begin{itemize}
+			\item Z=X+Y, $P_Z(z) = \sum_x P_X(x)P_Y(z-x)$
+			\item $f_Z(z) = \int_{-\infty}^{\infty}f_X(x)f_Y(z-x)dx$
+			\item $var(X_1+...+X_n) = \sum_i^n var(X_i) + \sum_{\{(i,j):i<>j\}}cov(X_i, X_j)$
+			\item for $Y = X_1 + ... + X_N$ where N is also a RV
+				$$E[Y] = E[N]E[X]$$
+				$$Var[Y] = E[N]var[X] + (E[X])^2var(N)$$
+		\end{itemize}
+\end{description}
+
+
 \end{multicols*}
 \end{document}
