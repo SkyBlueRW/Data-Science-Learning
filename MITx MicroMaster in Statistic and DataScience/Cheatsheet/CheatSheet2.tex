@@ -94,7 +94,7 @@
 
 \raggedright
 \footnotesize
-\begin{multicols*}{4}
+\begin{multicols*}{3}
 
 % multicol parameters
 % These lengths are set only within the two main columns
@@ -105,7 +105,106 @@
 \setlength{\columnsep}{2pt}
 
 
-\section{ML}
+\section{Neural Network}
+\begin{description}
+	\item {\bf Motivation}: learn classifier and feature representation at the same time to improve performance. 
+	\item {\bf Overcapacity}: Large models tend to be easier to learn because their units need to be adjusted so that they are, collectively sufficient to solve the task
+	\item {\bf Backpropagation}~
+		\begin{itemize}
+			\item {\bf Model Setup}~
+				$$Loss = C(a^L)$$
+				$$a_j^l = f(\sum_k w_{jk}^l a_k^{l-1} + b_j^l)$$
+				$$z_j^{l} = \sum_k w_{jk}^{l} a_k^{l-1} + b_j^l$$
+					\begin{itemize}
+						\item $b_j^l$ is the bias of the j-th neuron in the l-th layer
+						\item $a_j^l$ is the activation of j-th neuron in the l-th layer
+						\item $w_{jk}^l$ is the weight for the connection from the k-th neuron in the (l-1)-th layer to the j-th neuron in the l-th layer
+					\end{itemize}
+			\item {\bf Chain} define $\delta^l = \dfrac{\partial C}{\partial z_j^l}$
+				$$\delta^{L} = \dfrac{\partial C}{\partial a_j^L}f'(z_j^L)$$
+				$$\delta^l = \sum_k w_{kj}^{l+1}\delta_k^{l+1}f'(z_j^l)$$
+				$$\dfrac{\partial C}{\partial w_{jk}^l} = a_k^{l-1} \delta_j^l$$
+				$$\dfrac{\partial C}{\partial b_j^l} = \delta_j^l$$
+
+		\end{itemize}
+\end{description}
+
+
+\section{Recurrent Network}
+\begin{description}
+	\item {\bf Motivation}: Model the sequence
+\end{description}
+
+
+
+\section{Reinforcement Learning}
+Goal: Learn a good policy with none or limited supervision
+\begin{description}
+	\item[MDP]~
+		\begin{itemize}
+			\item {\bf Transition} $T(s, a, s') = \mathbb{P}(s'|s, a)$
+			\item {\bf Reward} $R(s, a, s')$. The reward of starting at s, taking action a and ending up at $s'$ 
+		\end{itemize}
+	\item[Utility]~
+		\begin{itemize}
+			\item {\bf Infinite Utility} $U[s_0,s_1,\dots]=\sum_{k=0}^{\infty}\gamma^kR(s_k).$
+			\item An finite step utility function can depend on steps left (I.E. very few steps left may lead to risk taking behavior)
+			\item Inifnite discounted utility make the utility depend on current step only
+			\item Infinite discunted utility converge to $\dfrac{R_{min}}{1-\gamma}$
+			\item {\bf Policy} $\pi(s)$ that assign an action $\pi$ to the state s
+			\item {\bf Optimal Policy} $\pi_s^{\star} = argmax_{a_s}\mathbb{E}[U(a_s)]$
+		\end{itemize}
+
+	\item[Bellman Equations]~
+		\begin{itemize}
+			\item {\bf Value Function} $V(s)$ expected reward starting from state s and acting optimally ever since
+				$$V(s) = \max_{a}Q(s, a) = Q(s,\pi^{\star}(s))$$
+			\item {\bf Q Function} $Q(s, a)$ expected reward strating at s, acting with acting a and then acting optimally aftewrwards
+				$$Q(s, a)=\sum_{s'}T(s,a,s')(R(s,a,s')+\gamma V(s'))$$
+			\item{\bf Value Iteration} $V(s) = \max_{a}\sum_{s'}T(s,a,s')(R(s,a,s')+\gamma V(s')$
+				$$V_{k+1}(s) = \max_{a}\sum_{s'}T(s,a,s')[R(s,a,s')+\gamma V_k(s')]$$
+			\item For the iterations, can plug in the final value to the rhs and solve for value
+			\item {\bf Q-value Iteration} 
+				$$Q_{k+1}(s, a)=\sum_{s'}T(s,a,s')[R(s,a,s')+\gamma \max_{a'}Q_{k}(s', a')]$$
+			\item Value Iteration will finally converge as long as $\gamma <1$ (speed for one iterationL $O(|S|^2 |A|)$)
+				$$V(s) - V_k(s) = \gamma (V(s) - v_{k-1}(s))$$
+		\end{itemize}
+		\item[Q-Value Iteration for RL] ~
+			\begin{enumerate}
+				\item Initialization: $Q(s,a)=0\;\forall s,a$
+				\item Iterate until convergence:
+				\begin{enumerate}
+					\item Collect sample: $s,a,s',R(s,a,s')$
+					\item Update:
+					\begin{align*}
+						Q_{i+1}(s,a)&\leftarrow\,\alpha\left[R(s,a,s')+\gamma\max\limits_{a'}Q_i(s',a')\right]+(1-\alpha)\,Q_i(s,a)\\
+						&=Q_i(s,a)+\alpha\left[R(s,a,s')+\gamma\max\limits_{a'}Q_i(s',a')-Q_i(s,a)\right]
+					\end{align*}
+				\end{enumerate}
+			\end{enumerate}
+		\item[Exploration]~
+			\begin{itemize}
+				\item Exploitation (Optimal) $1-\epsilon$ 
+				\item Exploitation (Random) $\epsilon$ should decay as get data
+			\end{itemize}
+		\item[NLP]~
+			\begin{itemize}
+				\item Difficulty arises from ambiguity intrinsic in natural languages
+				\item {\bf Approaches}
+					\begin{enumerate}
+						\item Symbolic: Structured rules. Encode all required info into an elaborate knowledge representation
+						\item Statistical: Infer language properties from large language samples.
+					\end{enumerate}
+				\item {\bf Word Embedding}
+					\begin{enumerate}
+						\item cosine similarity between words are used for a much sparse encoding
+						\item Bag of words approach sums up all the word embeddings to encode hence does not capture sequence
+					\end{enumerate}
+			\end{itemize}
+					
+\end{description}
+
+
 
 
 
