@@ -132,7 +132,37 @@
 
 \section{Recurrent Network}
 \begin{description}
-	\item {\bf Motivation}: Model the sequence
+	\item {\bf Motivation}: Model the sequence. How history is mapped to a feature vector (encoding) is alos part of the learning process
+	\item {Difference with FF}
+		\begin{itemize}
+			\item Inputs received at each layer. 
+			\item Layer number depend on lenght of sentence
+			\item parameters of each layer are shared
+		\end{itemize}
+	\item {\bf Basic RNN}
+		$$s_t  = tanh(W^{s,s}s_{t-1} + W^{s,x}x_t)$$
+		\begin{itemize}
+			\item Gradient can vanish or explode since the sequences are long and we apply transformation repeatedly. Can resolve by introducing gate
+		\end{itemize}
+	\item {\bf Simple Gated RNN}
+		\begin{align*}
+			g_t&=\text{sigmoid}\left(W^{g,s}s_{t-1}+W^{g,x}x_t\right)\\
+			s_t&=\left(1-g_t\right)\odot s_{t-1}+g_t\odot\tanh(W^{s,s}s_{t-1}+W^{s,x}x_t)
+		\end{align*}
+	\item {\bf LSTM}
+		\begin{alignat*}{2}
+			f_t&=\text{sigmoid}\left(W^{f,h}h_{t-1}+W^{f,x}x_t\right)\quad&&{\text{forget gate}}\\
+			i_t&=\text{sigmoid}\left(W^{i,h}h_{t-1}+W^{i,x}x_t\right) &&{\text{input gate}}\\
+			o_t&=\text{sigmoid}\left(W^{o,h}h_{t-1}+W^{o,x}x_t\right) &&{\text{output gate}}\\
+			c_t&=f_t\odot c_{t-1}+i_t\odot\tanh(W^{c,h}h_{t-1}+W^{c,x}x_t) \quad&&{\text{memory cell}}\\
+			h_t&=o_t\odot\tanh(c_t)&&{\text{visible state}}
+		\end{alignat*}	
+	\item {\bf Markov Model}
+		\begin{itemize}
+			\item Consist of an UNK symbol for any word, <beg>, <end>
+			\item {\bf Bigram Model} $\prod_{i=1} \mathbb{P}(w_i|w_{i-1})$
+			\item ML estimation: $\widehat{\mathbb{P}}(w'|w) = \dfrac{count(w', w)}{\sum_{w_i} count(w, w_i)}$
+		\end{itemize}
 \end{description}
 
 
