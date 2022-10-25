@@ -157,11 +157,36 @@
 			c_t&=f_t\odot c_{t-1}+i_t\odot\tanh(W^{c,h}h_{t-1}+W^{c,x}x_t) \quad&&{\text{memory cell}}\\
 			h_t&=o_t\odot\tanh(c_t)&&{\text{visible state}}
 		\end{alignat*}	
-	\item {\bf Markov Model}
+	\item {\bf Markov Model (First-Order)}
 		\begin{itemize}
 			\item Consist of an UNK symbol for any word, <beg>, <end>
 			\item {\bf Bigram Model} $\prod_{i=1} \mathbb{P}(w_i|w_{i-1})$
 			\item ML estimation: $\widehat{\mathbb{P}}(w'|w) = \dfrac{count(w', w)}{\sum_{w_i} count(w, w_i)}$
+		\end{itemize}
+	\item {\bf Markov Model to FNN}
+		$$z_k = \sum_j x_j W_{jk} + W_{0,k},   k \in \mathbb{R}$$
+		$$P_k = P(w_i=k|w_{i-1}) = \dfrac{e^{z_k}}{\sum_{j=1}^K e^{z_j}}$$
+		\begin{itemize}
+			\item Advantages: Fewer number of parameters, easily to control complexity by introducing hidden layers
+			\item Triagram: $2K^2+K$ vs $K^3$
+		\end{itemize}
+	\item {\bf Markove Model to RNN} At each step
+		$$s_t = tanh(W^{s,s}s_{t-1} + W^{s,w}x_t)$$
+		$$p_t = softmax(W^0 s_t)$$ or more complext like LSTM
+		$$p_t = softmax(W^0 h_t)$$
+ 
+\end{description}
+
+\section{CNN}
+Goal: Extend local learning globally
+\begin{description}
+	\item{\bf convolution} stride: layer l is obtained by slid (convolute) across the image at layer l-1 with a small kernel
+		$$\left(f*g\right)(t)\equiv\int_{-\infty}^{+\infty}f(\tau)g(t-\tau)d\tau.$$
+		$$\left(f*g\right)[n]\equiv\sum_{m=-\infty}^{m=+\infty}f[m]g[n-m].$$
+	\item{\bf Pool}: Further dim reduction. Can help to identify whether a feature is there withou knowing where it is 
+		\begin{itemize}
+			\item Induce translation invariance at cost of spatial resolution
+			\item Stried help to reduce the size 
 		\end{itemize}
 \end{description}
 
