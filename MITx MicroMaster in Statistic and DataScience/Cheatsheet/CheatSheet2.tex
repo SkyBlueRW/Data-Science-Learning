@@ -129,6 +129,131 @@
 		\end{itemize}
 \end{description}
 
+\section{Unsupervised Learning}
+\begin{description}
+	\item[Clustering: Input] ~
+	\begin{itemize}[]
+		\item Set of feature vectors $S_n=\left\{\left.x^{(i)}\right|i=1,\dots,n\right\}$
+		\item The number of clusters $K$
+	\end{itemize}
+	\item[Clustering: Output] ~
+	\begin{itemize}[]
+		\item A partition of indices $\left\{1,\dots,n\right\}$ into $K$ sets, $C_1,\dots,C_K$
+		\item {\it Representatives} in each of the $K$ partition sets, given as $z_1,\dots,z_K$
+	\end{itemize}
+	\item[Cost] We can calculate the total cost by summing the cost of each cluster:
+	$$\text{Cost}\left(C_1,\dots,C_K\right)=\sum_{j=1}^{K}\text{Cost}\left(C_j\right)$$
+
+	\item[Similarity Measure] ~
+		\begin{itemize}
+			\item We use the Euclidean distance between the elements of a cluster and its representative to calculate the cost for each cluster. Then, the total cost is
+			$$\text{Cost}(C_1,...,C_K, z_1,...,z_K) = \sum_{j=1}^K \sum_{i \in C_j} || x^{(i)}-z_j||^2$$
+			\item Cosine Distance: invariant to magnitude of the vectors
+			$$dist(X^{(i)}, X^{(j)}) = \dfrac{X^{(i)} .  X^{(j)}}{||X^{(i)}|| *  ||X^{(i)}||}$$
+		\end{itemize}
+
+	\item[K-Mean Algorithm]~
+		\begin{enumerate}
+			\item Randomly select $z_1,\dots,z_K$.
+			\item Iterate:
+			\begin{enumerate}
+				\item Given $z_1,\dots,z_K$, assign each data point $x^{(i)}$ to the closest $z_j$ so that
+				$$\text{Cost}\left(z_1,\dots,z_K\right)=\sum_{i=1}^{n}\min\limits_{j=1,\dots,K}||x^{(i)}-z_j||^2.$$
+				\item Given $C_1,\dots,C_K$, find the best representatives $z_1,\dots,z_K$, i.e., find $z_1,\dots,z_K$ such that
+				$$z_j=\argmin\limits_{z}\sum_{i\in C_j}||{x^{(i)}-z}||^2=\dfrac{1}{\left|C_j\right|}\sum\limits_{i\in C_j}x^{(i)}.$$
+			\end{enumerate}
+			\begin{itemize}
+				\item Local Solution (May run into troubles when initial rep are close to each other)
+				\item Not robust to outliers
+				\item Does not scale well with large dim: With increasing number of dims, a distance-based similarity measure converges to a constant value between any given examples
+				\item {\bf Computational complexity}: O(ndK)
+			\end{itemize}
+		\end{enumerate}
+
+	\item[K-Medoids Algorithm]~
+		\begin{enumerate}
+			\item Randomly select $\left\{z_1,\dots,z_K\right\}\subseteq\left\{x_1,\dots,x_n\right\}$.
+			\item Iterate:
+			\begin{enumerate}
+				\item Given $z_1,\dots,z_K$, assign each $x^{(i)}$ to the closest $z_j$ so that
+				$$\text{Cost}\left(z_1,\dots,z_K\right)=\sum_{i=1}^{n}\min\limits_{j=1,\dots,K}\text{dist}\left(x^{(i)},z_j\right)$$
+				\item Given $C_j\in\left\{C_1,\dots,C_K\right\}$, find the best representative $z_j\in\left\{x_1,\dots,x_n\right\}$ such that
+				$$\sum\limits_{x^{(i)}\in C_j}\text{dist}\left(x^{(i)},z_j\right)$$
+				is minimal.
+			\end{enumerate}
+		\end{enumerate}
+		\begin{itemize}
+			\item {\bf Computational complexity}: $O(ndK) + O(n^2dK)$
+		\end{itemize}
+
+	\item[Generative Model]~
+		\begin{itemize}
+			\item {\bf Generative vs. Discriminative Models} {\it Generative models} work by explicitly modeling the probability distribution of each of the individual classes in the training data. {\it Discriminative models} learn explicit decision boundary between classes.
+			\item[] {\bf Multinomial Generative Model}~
+				$$\mathbb{P}\left(w|\theta\right)=\theta_w,\quad\theta_w\geq0,\sum_{w\in W}\theta_w=1.$$
+					Then, the probability of generating the document $D$ is
+					$$\mathbb{P}\left(D|\theta\right)=\prod_{i=1}^{n}\theta_{w_i}=\prod_{w\in W}\theta_w^{\,\text{count}(w)}.$$
+					\item[Maximum Likelihood Estimate] 
+					$$\widehat{\theta}_w=\dfrac{\text{count}(w)}{\sum\limits_{w'\in W}\text{count}(w')}.$$
+					\item[] {\bf Prediction} Consider using a multinomial generative model $M$ for the task of binary classification consisting of two classes: $+$ (positive class) and $-$ (negative class).
+					\begin{itemize}
+						\item $\theta^+$: parameter for the positive class
+						\item $\theta^-$: parameter for the negative class
+					\end{itemize}
+					Suppose that we classify a new document $D$ to belong to the positive class if and only if
+					$$\log\dfrac{\mathbb{P}(D|\theta^+)}{\mathbb{P}(D|\theta^-)}\geq0.$$
+					The generative classifier is equivalent to a linear classifier:
+					$$\log\dfrac{\mathbb{P}(D|\theta^+)}{\mathbb{P}(D|\theta^-)}=\sum_{w\in W}\text{count}(w)\log\dfrac{\theta_w^+}{\theta_w^-}=\sum_{w\in W}\text{count}(w)\,\theta'_w.$$
+					\item[] {\bf Baye} ~
+					$$\mathbb{P}\left(y=+|D\right)=\dfrac{\mathbb{P}(D|\theta^+)\,\mathbb{P}(y=+)}{\mathbb{P}(D)}.$$
+					$$\log\dfrac{\mathbb{P}\left(y=+|D\right)}{\mathbb{P}\left(y=-|D\right)}=\sum_{w\in W}\text{count}(w)\,\theta'_w+\theta'_0$$
+	where $\theta'_w=\log\dfrac{\theta^+_w}{\theta^-_w}$ and $\theta'_0=\log\dfrac{\mathbb{P}(y=+)}{\mathbb{P}(y=-)}$.
+	
+					\item[] {\bf Generative Gaussian}~
+						$X \in \mathbb{R}^d$ with mean $\mu \in \mathbb{R}^d$ and the same standard deviation $\sigma$ (uncorrelated)
+						$$f_X\left(\mathbf{x}|\mu,\sigma^2\right)=\dfrac{1}{\left(2\pi\sigma^2\right)^{d/2}}\exp(-\dfrac{1}{2\sigma^2}||\mathbf{x}-\mu||^2).$$
+					      $$\widehat{\mu}=\frac{1}{n}\sum_{i=1}^{n}\mathbf{x}^{(i)}$$
+						$$\widehat{\sigma}^2=\frac{1}{nd}\sum_{i=1}^{n} ||\mathbf{x}^{(i)}-\mu||^2$$
+					\end{itemize}
+\end{description}
+
+\subsection{EM Algorithm}
+\begin{description}
+	\item[Gaussian Mixture Models] 
+	$$p(\mathbf{x}|\theta)=\sum_{j=1}^{K}p_j\mathcal{N}\left(\mathbf{x};\mu^{(j)},\sigma_j^2\mathbf{I}\right).$$
+	For the training set
+	$$S_n=\left\{\mathbf{x}^{(i)}, i=1,\dots,n\right\},$$
+	the likelihood is
+	$$\mathbb{P}\left(S_n|\theta\right)=\prod_{i=1}^{n}\sum_{j=1}^{K}p_j\mathcal{N}\left(\mathbf{x}^{(i)};\mu^{(j)},\sigma_j^2\mathbf{I}\right).$$
+	\item[Observed Case] Consider the case of hard clustering, i.e., a point either belongs to a cluster or not. Let
+	$$\delta(j|i)=
+	\begin{cases}
+		1,\quad&\mathbf{x}^{(i)}\text{ is assigned to }j\\
+		0,&\text{otherwise}.
+	\end{cases}$$
+	Also, let $\widehat{n}_j=\sum\limits_{i=1}^{n}\delta(j|i)$ denote the number of points belonging to cluster $j$. Maximizing the likelihood gives
+	\begin{align*}
+		\widehat{p}_j&=\dfrac{\widehat{n}_j}{n}\\
+		\widehat{\mu}^{(j)}&=\dfrac{1}{\widehat{n}_j}\sum_{i=1}^{n}\delta(j|i)\,\mathbf{x}^{(i)}\\
+		\widehat{\sigma}^2_j&=\dfrac{1}{\widehat{n}_jd}\sum_{i=1}^{n}\delta(j|i)\,||\mathbf{x}^{(i)}-\mu^{(j)}||^2.
+	\end{align*}
+	\item[The EM Algorithm] Instead of hard clustering, the data can actually be generated from different clusters with different probabilities. We have soft clustering. We can maximize the likelihood through the EM algorithm.
+	\begin{enumerate}
+		\item[] Randomly initialize $\theta$: $\mu^{(1)},\dots,\mu^{(K)},\sigma^2_1,\dots,\sigma^2_K,p_1,\dots,p_K.$
+		\item {\bf E-step:}
+		$$p(j|i)=\dfrac{p_j\mathcal{N}\left(\mathbf{x}^{(i)};\mu^{(j)},\sigma^2_j\mathbf{I}\right)}{p\left(\mathbf{x}|\theta\right)}$$
+		where $p(\mathbf{x}|\theta)=\sum\limits_{j=1}^{K}p_j\mathcal{N}\left(\mathbf{x}^{(i)};\mu^{(j)},\sigma^2_j\mathbf{I}\right)$
+		\item {\bf M-step:}
+		\begin{align*}
+			\widehat{n}_j&=\sum_{i=1}^{n}p(j|i)\\
+			\widehat{p}_j&=\dfrac{\widehat{n}_j}{n}\\
+			\widehat{\mu}^{(j)}&=\dfrac{1}{\widehat{n}_j}\sum_{i=1}^{n}p(j|i)\,\mathbf{x}^{(i)}\\
+			\widehat{\sigma}^2_j&=\dfrac{1}{\widehat{n}_jd}\sum_{i=1}^{n}p(j|i)||\mathbf{x}^{(i)}-\mu^{(j)}||^2.
+		\end{align*}
+	\end{enumerate}
+\end{description}
+
+
 
 \section{Recurrent Network}
 \begin{description}
