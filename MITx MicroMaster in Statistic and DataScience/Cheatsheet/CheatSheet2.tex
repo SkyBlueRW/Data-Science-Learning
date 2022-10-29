@@ -356,70 +356,6 @@ $$K\left(x,x'\right)=\phi(x)\cdot\phi(x')$$
 	\end{enumerate}
 \end{description}
 
-
-
-\section{Recurrent Network}
-\begin{description}
-	\item {\bf Motivation}: Model the sequence. How history is mapped to a feature vector (encoding) is alos part of the learning process
-	\item {Difference with FF}
-		\begin{itemize}
-			\item Inputs received at each layer. 
-			\item Layer number depend on lenght of sentence
-			\item parameters of each layer are shared
-		\end{itemize}
-	\item {\bf Basic RNN}
-		$$s_t  = tanh(W^{s,s}s_{t-1} + W^{s,x}x_t)$$
-		\begin{itemize}
-			\item Gradient can vanish or explode since the sequences are long and we apply transformation repeatedly. Can resolve by introducing gate
-		\end{itemize}
-	\item {\bf Simple Gated RNN}
-		\begin{align*}
-			g_t&=\text{sigmoid}\left(W^{g,s}s_{t-1}+W^{g,x}x_t\right)\\
-			s_t&=\left(1-g_t\right)\odot s_{t-1}+g_t\odot\tanh(W^{s,s}s_{t-1}+W^{s,x}x_t)
-		\end{align*}
-	\item {\bf LSTM}
-		\begin{alignat*}{2}
-			f_t&=\text{sigmoid}\left(W^{f,h}h_{t-1}+W^{f,x}x_t\right)\quad&&{\text{forget gate}}\\
-			i_t&=\text{sigmoid}\left(W^{i,h}h_{t-1}+W^{i,x}x_t\right) &&{\text{input gate}}\\
-			o_t&=\text{sigmoid}\left(W^{o,h}h_{t-1}+W^{o,x}x_t\right) &&{\text{output gate}}\\
-			c_t&=f_t\odot c_{t-1}+i_t\odot\tanh(W^{c,h}h_{t-1}+W^{c,x}x_t) \quad&&{\text{memory cell}}\\
-			h_t&=o_t\odot\tanh(c_t)&&{\text{visible state}}
-		\end{alignat*}	
-	\item {\bf Markov Model (First-Order)}
-		\begin{itemize}
-			\item Consist of an UNK symbol for any word, <beg>, <end>
-			\item {\bf Bigram Model} $\prod_{i=1} \mathbb{P}(w_i|w_{i-1})$
-			\item ML estimation: $\widehat{\mathbb{P}}(w'|w) = \dfrac{count(w', w)}{\sum_{w_i} count(w, w_i)}$
-		\end{itemize}
-	\item {\bf Markov Model to FNN}
-		$$z_k = \sum_j x_j W_{jk} + W_{0,k},   k \in \mathbb{R}$$
-		$$P_k = P(w_i=k|w_{i-1}) = \dfrac{e^{z_k}}{\sum_{j=1}^K e^{z_j}}$$
-		\begin{itemize}
-			\item Advantages: Fewer number of parameters, easily to control complexity by introducing hidden layers
-			\item Triagram: $2K^2+K$ vs $K^3$
-		\end{itemize}
-	\item {\bf Markove Model to RNN} At each step
-		$$s_t = tanh(W^{s,s}s_{t-1} + W^{s,w}x_t)$$
-		$$p_t = softmax(W^0 s_t)$$ or more complext like LSTM
-		$$p_t = softmax(W^0 h_t)$$
- 
-\end{description}
-
-\section{CNN}
-Goal: Extend local learning globally
-\begin{description}
-	\item{\bf convolution} stride: layer l is obtained by slid (convolute) across the image at layer l-1 with a small kernel
-		$$\left(f*g\right)(t)\equiv\int_{-\infty}^{+\infty}f(\tau)g(t-\tau)d\tau.$$
-		$$\left(f*g\right)[n]\equiv\sum_{m=-\infty}^{m=+\infty}f[m]g[n-m].$$
-	\item{\bf Pool}: Further dim reduction. Can help to identify whether a feature is there withou knowing where it is 
-		\begin{itemize}
-			\item Induce translation invariance at cost of spatial resolution
-			\item Stried help to reduce the size 
-		\end{itemize}
-\end{description}
-
-
-
 \section{Reinforcement Learning}
 Goal: Learn a good policy with none or limited supervision
 \begin{description}
@@ -487,7 +423,101 @@ Goal: Learn a good policy with none or limited supervision
 					
 \end{description}
 
+\section{Recurrent Network}
+\begin{description}
+	\item {\bf Motivation}: Model the sequence. How history is mapped to a feature vector (encoding) is alos part of the learning process
+	\item {Difference with FF}
+		\begin{itemize}
+			\item Inputs received at each layer. 
+			\item Layer number depend on lenght of sentence
+			\item parameters of each layer are shared
+		\end{itemize}
+	\item {\bf Basic RNN}
+		$$s_t  = tanh(W^{s,s}s_{t-1} + W^{s,x}x_t)$$
+		\begin{itemize}
+			\item Gradient can vanish or explode since the sequences are long and we apply transformation repeatedly. Can resolve by introducing gate
+		\end{itemize}
+	\item {\bf Simple Gated RNN}
+		\begin{align*}
+			g_t&=\text{sigmoid}\left(W^{g,s}s_{t-1}+W^{g,x}x_t\right)\\
+			s_t&=\left(1-g_t\right)\odot s_{t-1}+g_t\odot\tanh(W^{s,s}s_{t-1}+W^{s,x}x_t)
+		\end{align*}
+	\item {\bf LSTM}
+		\begin{alignat*}{2}
+			f_t&=\text{sigmoid}\left(W^{f,h}h_{t-1}+W^{f,x}x_t\right)\quad&&{\text{forget gate}}\\
+			i_t&=\text{sigmoid}\left(W^{i,h}h_{t-1}+W^{i,x}x_t\right) &&{\text{input gate}}\\
+			o_t&=\text{sigmoid}\left(W^{o,h}h_{t-1}+W^{o,x}x_t\right) &&{\text{output gate}}\\
+			c_t&=f_t\odot c_{t-1}+i_t\odot\tanh(W^{c,h}h_{t-1}+W^{c,x}x_t) \quad&&{\text{memory cell}}\\
+			h_t&=o_t\odot\tanh(c_t)&&{\text{visible state}}
+		\end{alignat*}	
+	\item {\bf Markov Model (First-Order)}
+		\begin{itemize}
+			\item Consist of an UNK symbol for any word, <beg>, <end>
+			\item {\bf Bigram Model} $\prod_{i=1} \mathbb{P}(w_i|w_{i-1})$
+			\item ML estimation: $\widehat{\mathbb{P}}(w'|w) = \dfrac{count(w', w)}{\sum_{w_i} count(w, w_i)}$
+		\end{itemize}
+	\item {\bf Markov Model to FNN}
+		$$z_k = \sum_j x_j W_{jk} + W_{0,k},   k \in \mathbb{R}$$
+		$$P_k = P(w_i=k|w_{i-1}) = \dfrac{e^{z_k}}{\sum_{j=1}^K e^{z_j}}$$
+		\begin{itemize}
+			\item Advantages: Fewer number of parameters, easily to control complexity by introducing hidden layers
+			\item Triagram: $2K^2+K$ vs $K^3$
+		\end{itemize}
+	\item {\bf Markove Model to RNN} At each step
+		$$s_t = tanh(W^{s,s}s_{t-1} + W^{s,w}x_t)$$
+		$$p_t = softmax(W^0 s_t)$$ or more complext like LSTM
+		$$p_t = softmax(W^0 h_t)$$
+ 
+\end{description}
 
+\section{CNN}
+Goal: Extend local learning globally
+\begin{description}
+	\item{\bf convolution} stride: layer l is obtained by slid (convolute) across the image at layer l-1 with a small kernel
+		$$\left(f*g\right)(t)\equiv\int_{-\infty}^{+\infty}f(\tau)g(t-\tau)d\tau.$$
+		$$\left(f*g\right)[n]\equiv\sum_{m=-\infty}^{m=+\infty}f[m]g[n-m].$$
+	\item{\bf Pool}: Further dim reduction. Can help to identify whether a feature is there withou knowing where it is 
+		\begin{itemize}
+			\item Induce translation invariance at cost of spatial resolution
+			\item Stried help to reduce the size 
+		\end{itemize}
+\end{description}
+
+
+
+
+
+
+\section{python}
+\begin{description}
+	\item[Distribution] ~
+		\begin{itemize}
+			\item scipy.stats.binom(n=n, p=p)
+			\item scipy.stats.poisson(mu=mu)
+			\item scipy.stats.norm()
+			\item scipy.stats.chi(df=df)
+		\end{itemize}
+	\item[Distribution Function]~
+		\begin{itemize}
+			\item $1 - \alpha$ = rv.cdf($q_{\alpha}$) 
+			\item $q_{\alpha}$ = rv.ppf($1 - \alpha$)
+			\item $\alpha$ = rv.sf($q_{\alpha}$)
+			\item $q_{\alpha}$ = rv.isf($\alpha$)
+		\end{itemize}
+	\item[Hypothesis Test]~
+		\begin{itemize}
+			\item {\bf Fisher exact test} scipy.stats.fisher$\_$exact(np.array([[$x_{test}$, $x_{cont}$], [$n_{test}$, $n_{cont}$] ]), 'less') with less in alternative hypothesis
+			\item {\bf One sample t test} scipy.stats.ttest$\_$1samp(array, popmean=$H_0$, alternative='greater')
+			\item If nul rejected by Bonferroni, then it is also rejected by HB. Power of HB is greater than or equal to that of Bonferroni
+			\item If nul rejected by HB then it is always rejected by BH
+			\item Restriction on FWER is more strict
+			\item {\bf Multi Test Correction} statsmodels.stats.multitest.multipletests(pvals, alpha=0.05, method='holm')
+			\item statsmodels.api.qqplot(x,line='s')		
+			\item {\bf Likelihood}: scipy.stats.poisson.pmf(gamma$\_$data['count'], gamma$\_$data['seconds']*lamb).prod(axis=0)
+			\item Lambda$\_$observed = -2*np.log(likelihood$\_$H0(lambda$\_$hat$\_$H0)/likelihood$\_$H1(lambdas$\_$hat$\_$H1))	
+			\item scipy.stats.kstest
+	\end{itemize}
+\end{description}
 
 
 
