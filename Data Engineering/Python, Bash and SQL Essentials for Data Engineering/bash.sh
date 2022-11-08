@@ -70,3 +70,45 @@ find . -name "*.sh"
 find . -perm /+x ! -name '.*' -type f
 ### find all executable non-invisible files and ignore .git directories
 find . -perm /+x -not -path '*/\.*' -type f 
+
+
+
+## Building a scrip in bash
+#!/usr/bin/env/bash
+# chmod +x
+### Set strict mode. Causes shell to exit when a command fails
+set -e 
+### Enables printing of shell input lines as they are read
+set -v 
+### Enables print of command traces before executing command
+set -x
+### set a variable 
+variable="one"
+#!/usr/bin/bash -xv for debugging mode
+
+## Bulding a Bash Function
+add() {
+    echo "First Parameter: $1"
+    echo "Second Parameter: $2"
+
+    num1=$1
+    num2=$2
+    result=$((num1 + num2))
+    echo $result
+}
+### call with add 99 100
+### output=$(add 5 9)
+
+
+## Makefile
+hello:
+    echo "This is a recipe called hello"
+
+goodbye:
+    echo "This is a recipe called goodbye"
+
+all: hello goodbye 
+
+## Data Structure
+### Array
+declare -a array=("apple" "pear" "cherry")
