@@ -112,3 +112,39 @@ all: hello goodbye
 ## Data Structure
 ### Array
 declare -a array=("apple" "pear" "cherry")
+
+
+# Search 
+## Locate Command: use metadata
+sudo updatedb
+### look for detailed path
+locate .zshrc
+### count number
+locate -c .zshrc
+
+## Find command: real time
+find . -name .zshrc
+sudo find / -name .zshrc
+### Remove all
+find /tmp -name foo* -type f -print | xargs /bin/rm -f
+
+# File System 
+## Create: touch, mkdir
+mkdir -p bar/bam/biz
+## Read: cat, less, grep
+## Update: mv, tar, zip, chmod, rsync
+rsync -av foo/ newspot/foo/ # Incremental change
+zip -r archives/foo.zip foo
+unzip archives/foo.zip
+## Delete: rm, rmdir
+
+
+# Permissions
+# Name        Owner     Group     Other
+# access      r w x     r w x     r w x 
+# binary      4 2 1     4 2 1     4 2 1 
+# enabled     1 1 1     1 0 1     1 0 0
+
+# result      4 2 1     4 0 1     1 0 0  
+# total         7         5         4
+  
