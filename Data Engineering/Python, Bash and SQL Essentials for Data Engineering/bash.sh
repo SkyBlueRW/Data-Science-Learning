@@ -148,3 +148,8 @@ unzip archives/foo.zip
 # result      4 2 1     4 0 1     1 0 0  
 # total         7         5         4
   
+# Text processing
+### how many time bads 
+grep -c bad file.txt 
+### Unique item 
+uniq -c txt.txt
