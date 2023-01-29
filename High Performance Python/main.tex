@@ -1,0 +1,50 @@
+
+
+\documentclass{article}
+
+\input{structure.tex} % Include the file specifying the document structure and custom commands
+
+%----------------------------------------------------------------------------------------
+%	ASSIGNMENT INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{High Performance Python } % Title of the assignment
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+
+\section{Performant Python}
+	
+	\subsection{Computer System}
+		\begin{enumerate}
+			\item {\bf Computational Uinit} 
+				\begin{itemize}
+					\item Key properties are {\bf IPC} (instruction per cycle) and {\bf clock speed} (number of cycles per second).
+					\item {\bf GIL (Global Interpreter Lock)} makes sure that a python process can run only one instruction at a time regardless of number of cores it is currently using. Can be avoided by multiprocessing, numpy, Cython or distributed models of computing.
+				\end{itemize}
+			\item {\bf Memory Unit} 
+				\\ In terms of read/write speeds and latency, Spinning hard drive < Solid-state hard drive < RAM < L1/L2 cache
+			\item {\bf Communication Layers}
+		\end{enumerate}
+	\subsection{Python Performance Dragger}
+		\begin{enumerate}
+			\item {\bf Not compiled} hence missing compiler tricks from source code to machine code
+			\item {\bf Dynamic data type} more overhead before computation
+			\item {\bf Garbage Collected Laguange \-> memory fragmentation}: Python objects are not laid out in the most optimal way in memory.
+			\item {\bf GIL}: Only one instruction at a time
+		\end{enumerate}
+
+
+\section{Python Data Type}
+	
+	\subsection{List and \& Tuple}
+	
+	\subsection{Dictionary \& Set}
+
+	\subsection{Iterator \& Generator}
+
+	\subsection{Matrix \& Vector computation}
+
+\end{document}
