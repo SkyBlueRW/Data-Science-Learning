@@ -27,6 +27,9 @@
 			\item {\bf Memory Unit} 
 				\\ In terms of read/write speeds and latency, Spinning hard drive < Solid-state hard drive < RAM < L1/L2 cache
 			\item {\bf Communication Layers}
+				\begin{itemize}
+					\item Bus can only move contiguous chuncks of memory
+				\end{itemize}
 		\end{enumerate}
 	\subsection{Python Performance Dragger}
 		\begin{enumerate}
@@ -34,17 +37,69 @@
 			\item {\bf Dynamic data type} more overhead before computation
 			\item {\bf Garbage Collected Laguange \-> memory fragmentation}: Python objects are not laid out in the most optimal way in memory.
 			\item {\bf GIL}: Only one instruction at a time
+
 		\end{enumerate}
 
 
 \section{Python Data Type}
 	
 	\subsection{List and \& Tuple}
+		\begin{itemize}
+			\item Array data structure. Fast in retriving item by location (O(1)). Reasonable speed in look up with bisect search (O(log(n))) 
+			\item {\bf Dynamic data type}: Elements can be mixed data types. Library module {\bf array} can reduce dynamic data type overheads for non-numerical situations. Library module {\bf numpy} can help for numerical situations.
+			\item {\bf List} are dynamic arrays that are {\bf mutable} and {\bf allow for resizing}. List will reserve additional memory space for potential append hence less memory efficient. A new list will be created once memory reserved for the list is not sufficent for further append.
+			\item {\bf Tuples} are static arrays that are {\bf immutable} and can not be changed after creation. Tuples are cached by Python runtime hence much faster.
+			\item Library module {\bf array} can be reduce dynamic data type overheads for nonnumerica situations
+		\end{itemize}
 	
 	\subsection{Dictionary \& Set}
+		\begin{itemize}
+			\item Dictionaries are data types efficient in lookup (O(1)) due to hashable functions. Sets are dictionaries with only keys
+			\item Sets are dictionaries with only keys. Sets are efficient in keep unique values (appending O(1) with set.add())
+			\item {\bf Hash Function} transform keys to index for efficient lookup
+			\item {\bf Name Space}: python use dictionaries to hold all objects. Local > Enclosing > Global > Built-in
+		\end{itemize}
 
 	\subsection{Iterator \& Generator}
+		\begin{itemize}
+			\item Generator can be used to process data larger than RAM
+		\end{itemize}
 
-	\subsection{Matrix \& Vector computation}
+
+\section{Numerical calculation with python \& pandas}
+	\subsection{Native Python List}
+		\begin{itemize}
+			\item {\bf Memory segmentation}: Python lists store pointers to actual data. Actual data are spreaded in the memory (might not be continuous). Fragmentation increases cost to transfer data from memory to CPU.
+			\item Vectorization can occur only when CPU cache with all the relevant data. Python bytecode is not optimized for vectorization so for loops can not predict when using vectorization would be beneficial.
+				\begin{enumerate}
+					\item All relevant data in CPU cache
+					\item Invoke SIMU instruction for calculation
+				\end{enumerate}
+		\end{itemize}
+	\subsection{Numpy}
+		\begin{itemize}
+			\item {\bf Numpy} store data in contiguous chunks of memory and supports vectorized operation on its data.
+			\item Static data types so less overhead
+			\item {\bf In place Operation} can help to reduce  number of allocations we make in code. In place operations such as +=, *= can help to skip the step of allocating memory to new objects
+			\item Numpy's optimization of vector operation occur only one operation at a time. For operation A * B + C, numpy first evaluate and store A * B in a temporary vector then add this new vector to C. 
+			\item {\bf numexpr} is a module that can take an entire vector expression and compile it into efficient code. {\bf numexpr} is using multile core for calculation. When matrix is small it is does not compensate enough for overhead on multiple cores. While when the matrix is very large, it can help to speed up.
+		\end{itemize}
+
+
+	\subsection{Pandas}
+		\begin{itemize}
+			\item Columns opf the same dtype are grouped together hence row-wise operations on columns of the same datatype faster.
+			\item Numeric columns directly reference their Numpy data; String columns reference a list of python strings, which are scattered in memory
+			\item Avoid concate as it creates a new section of memory
+			\item avoid inplace=True operator
+			\item use del keyword and drop function to delete un-used references
+			\item include numexpr and bottleneck module
+			\item For large series of strings with low cardinality, convert it to category type
+		\end{itemize}
+
+
+
 
 \end{document}
+
+
